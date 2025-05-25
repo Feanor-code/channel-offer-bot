@@ -9,7 +9,6 @@ class SendAnyEvent:
         user_id: int,
         reply_markup: types.InlineKeyboardMarkup | None = None
     ) -> None:
-        self.bot = bot
         self.message = message
         self.user_id = user_id
         self.reply_markup = reply_markup
