@@ -1,7 +1,5 @@
 import asyncio
 
-import logging
-
 from tgbot.handlers.edit_post import router
 from .dispatcher import bot, dp
 
