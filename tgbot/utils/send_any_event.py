@@ -35,11 +35,11 @@ class SendAnyEvent:
 
            return event_type, method, file_id
 
-    def quote(self) -> None:
-        if (text := self.message.caption) is None:
-            return None 
+    def quote(self, highlight: typing.Literal[True] | None = None) -> None:
+        if (text := self.message.html_text) is None:
+            return None
         
-        self.quote_block = f"<blockquote>{text}</blockquote>"
+        self.quote_block = f"<blockquote>{text}</blockquote>" if highlight else text
 
     async def send(self) -> types.Message | None:
         if (event := self.type_check()) is None:

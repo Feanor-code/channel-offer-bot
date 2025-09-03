@@ -16,7 +16,7 @@ router = Router()
 
 @router.message()
 async def edit_post(message: types.Message, any_event: SendAnyEvent) -> None:
-    any_event.quote()
+    any_event.quote(highlight=True)
     any_event.quote_block = any_event.quote_block + config.owner.post_text
     any_event.reply_markup = await confirm_button()
 
@@ -29,7 +29,7 @@ async def edit_post(message: types.Message, any_event: SendAnyEvent) -> None:
 
 
 @router.callback_query(ConfirmCallback())
-async def confirm(query: types.CallbackQuery, any_event: SendAnyEvent) -> None:   
+async def confirm(query: types.CallbackQuery, any_event: SendAnyEvent) -> None: 
     await query.message.delete_reply_markup()
 
     any_event.quote()
