@@ -16,7 +16,7 @@ class EventMiddleware(BaseMiddleware):
     ) -> Any:
         message = None
         if event.message:
-           message = event.message 
+            message = event.message 
         if event.callback_query:
             message = event.callback_query.message
         
