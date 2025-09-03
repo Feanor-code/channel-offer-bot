@@ -1,7 +1,7 @@
 [owner]
-id=
-post_text=""
+id = 0
+post_text = ""
 
 [bot]
-channel_id=
-token=""
+channel_id = 0
+token = ""

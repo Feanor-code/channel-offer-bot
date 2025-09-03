@@ -1,38 +1,38 @@
-from aiogram import Bot, Router, types
-from aiogram.fsm.context import FSMContext
+from __future__ import annotations
+import typing 
+
+from aiogram import Router
 
 from tgbot.config import config
 from tgbot.keyboards.callbacks import ConfirmCallback
 from tgbot.keyboards.keyboards import confirm_button
-from tgbot.utils.send_any_event import SendAnyEvent
+
+if typing.TYPE_CHECKING:
+    from aiogram import types
+    from tgbot.utils.send_any_event import SendAnyEvent
 
 router = Router()
 
 
 @router.message()
-async def edit_post(message: types.Message, bot: Bot, state: FSMContext) -> None:
-    any_event = SendAnyEvent(
-        bot,
-        message,
-        config.owner.id,
-        await confirm_button()
-    )
+async def edit_post(message: types.Message, any_event: SendAnyEvent) -> None:
     any_event.quote()
     any_event.quote_block = any_event.quote_block + config.owner.post_text
-    await any_event.send()
+    any_event.reply_markup = await confirm_button()
 
-    await state.update_data(any_event=any_event)
+    if await any_event.send() is None:
+        await message.reply(
+            "Такое отправлять нельзя! 🚫 / You can't send this! 🚫\n\n"
+            "Пожалуйста, отправь фото, видео, кружок или GIF.\n"
+            "Please send a photo, video, voice message, or GIF."
+        )
 
 
 @router.callback_query(ConfirmCallback())
-async def confirm(query: types.CallbackQuery, state: FSMContext) -> None:
-    await query.message.edit_reply_markup(reply_markup=None)
-    data = await state.get_data()
-    any_event: SendAnyEvent = data.get("any_event")
+async def confirm(query: types.CallbackQuery, any_event: SendAnyEvent) -> None:   
+    await query.message.delete_reply_markup()
 
-    if any_event is None:
-        return
-    
+    any_event.quote()
     any_event.user_id = config.bot.channel_id
     any_event.reply_markup = None
     await any_event.send()
